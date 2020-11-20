@@ -54,6 +54,8 @@ boolean takeNewPhoto = false;
 #define HREF_GPIO_NUM     23
 #define PCLK_GPIO_NUM     22
 
+#define BUILD_IN_LED	4
+
 const char index_html[] PROGMEM = R"rawliteral(
 <!DOCTYPE HTML><html>
 <head>
@@ -173,6 +175,9 @@ void setup() {
     request->send(SPIFFS, FILE_PHOTO, "image/jpg", false);
   });
 
+  // prepare flashlight
+  pinMode(BUILD_IN_LED, OUTPUT);
+
   // Start server
   server.begin();
 
@@ -202,7 +207,13 @@ void capturePhotoSaveSpiffs( void ) {
     // Take a photo with the camera
     Serial.println("Taking a photo...");
 
+	digitalWrite(BUILD_IN_LED, HIGH);
+    delay(5);
+
     fb = esp_camera_fb_get();
+
+	digitalWrite(BUILD_IN_LED, LOW);
+
     if (!fb) {
       Serial.println("Camera capture failed");
       return;
