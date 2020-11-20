@@ -188,7 +188,7 @@ void loop() {
     capturePhotoSaveSpiffs();
     takeNewPhoto = false;
   }
-  delay(1);
+  delay(1000);
 }
 
 // Check if photo capture was successful
@@ -208,10 +208,11 @@ void capturePhotoSaveSpiffs( void ) {
     Serial.println("Taking a photo...");
 
 	digitalWrite(BUILD_IN_LED, HIGH);
-    delay(5);
+    delay(10);
 
     fb = esp_camera_fb_get();
 
+    delay(90);
 	digitalWrite(BUILD_IN_LED, LOW);
 
     if (!fb) {
