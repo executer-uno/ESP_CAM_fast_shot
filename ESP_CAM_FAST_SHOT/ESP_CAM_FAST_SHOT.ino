@@ -24,9 +24,8 @@
 #include <SPIFFS.h>
 #include <FS.h>
 
-// Replace with your network credentials
-const char* ssid = 		***REMOVED***;
-const char* password = 	"***REMOVED***";
+#include "OTA.h"
+#include "credentials.h"
 
 // Create AsyncWebServer object on port 80
 AsyncWebServer server(80);
@@ -100,12 +99,10 @@ void setup() {
   // Serial port for debugging purposes
   Serial.begin(115200);
 
-  // Connect to Wi-Fi
-  WiFi.begin(ssid, password);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(1000);
-    Serial.println("Connecting to WiFi...");
-  }
+  Serial.println("Booting");
+
+  setupOTA("ESPCAM_FAST", mySSID, myPASSWORD);
+
   if (!SPIFFS.begin(true)) {
     Serial.println("An Error has occurred while mounting SPIFFS");
     ESP.restart();
@@ -188,7 +185,9 @@ void loop() {
     capturePhotoSaveSpiffs();
     takeNewPhoto = false;
   }
-  delay(1000);
+  delay(50);
+
+  ArduinoOTA.handle();
 }
 
 // Check if photo capture was successful
